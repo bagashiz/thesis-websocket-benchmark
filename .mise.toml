@@ -1,0 +1,7 @@
+[tools]
+go = "latest"
+task = "latest"
+golangci-lint = "latest"
+air = "latest"
+k6 = "latest"
+websocat = "latest"

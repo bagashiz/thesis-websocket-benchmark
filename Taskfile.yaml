@@ -1,0 +1,39 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  default:
+    desc: "Gettings started"
+    cmds:
+      - task: install
+      - task: lint
+
+  install:
+    desc: "Install dependencies"
+    cmds:
+      - go mod download
+
+  lint:
+    desc: "Run linter"
+    cmd: golangci-lint run ./...
+
+  coder:
+    desc: "Run air for coder websocket implementation"
+    cmd: 'air --build.cmd "go build -o tmp/coder cmd/coder/main.go" --build.bin "./tmp/coder"'
+
+  gorilla:
+    desc: "Run air for gorilla websocket implementation"
+    cmd: 'air --build.cmd "go build -o tmp/gorilla cmd/gorilla/main.go" --build.bin "./tmp/gorilla"'
+
+  build:coder:
+    desc: "Build binary for coder websocket implementation"
+    cmd: CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/coder ./cmd/main.go
+
+  build:gorilla:
+    desc: "Build binary for gorilla websocket implementation"
+    cmd: CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/gorilla ./cmd/main.go
+
+  ws:
+    desc: "Connect to websocket server using websocat"
+    cmd: "websocat ws://localhost:8080/echo"
