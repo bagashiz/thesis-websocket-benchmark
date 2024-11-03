@@ -2,6 +2,9 @@
 
 version: "3"
 
+dotenv:
+  - ".env"
+
 tasks:
   default:
     desc: "Gettings started"
@@ -37,3 +40,7 @@ tasks:
   ws:
     desc: "Connect to websocket server using websocat"
     cmd: "websocat ws://localhost:8080/echo"
+
+  k6:
+    desc: "Run K6 scripts"
+    cmd: "k6 run -e TOTAL_CLIENT={{.TOTAL_CLIENT}} -e WS_URL={{.WS_URL}} -e DATA_FILE=../{{.DATA_FILE}} {{.CLI_ARGS}}"
