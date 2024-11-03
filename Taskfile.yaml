@@ -9,6 +9,7 @@ tasks:
   default:
     desc: "Gettings started"
     cmds:
+      - mkdir -p scripts/results/{concurrent,dataflow,persistent,nonpersistent}
       - task: install
       - task: lint
 

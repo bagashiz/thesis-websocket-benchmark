@@ -3,35 +3,37 @@ import { Trend } from "k6/metrics";
 import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
 export const options = {
-  vus: __ENV.TOTAL_CLIENT,
-  duration: "1m",
+  vus: 100,
+  iterations: 100,
 };
 
 const url = __ENV.WS_URL;
-const data = open("../data/1kb.html");
-const duration = 60_000; // 1m
+const data = open(__ENV.DATA_FILE);
+const requests = 10_000 / options.vus;
 
 const latency = new Trend("latency", true);
 
 export default function () {
   const ws = new WebSocket(url);
+  let counter = 0;
 
   ws.onopen = () => {
     const send = setInterval(() => {
+      if (counter >= requests) {
+        clearInterval(send);
+        ws.close();
+        return;
+      }
       const start = Date.now();
       ws.send(data);
       ws.onmessage = (_) => {
         latency.add(Date.now() - start);
       };
+      counter++;
     }, 0);
 
-    const close = setTimeout(() => {
-      clearInterval(send);
-      ws.close();
-    }, duration);
-
     ws.onclose = () => {
-      clearTimeout(close);
+      clearTimeout(send);
     };
   };
 }
@@ -39,11 +41,10 @@ export default function () {
 export function handleSummary(data) {
   const result = {
     latency_avg: Math.round(data.metrics.latency.values.avg * 100) / 100, // ms
-    throughput: Math.round(data.metrics.ws_msgs_received.values.rate),
   };
 
   return {
-    "./scripts/results/concurrent/summary.json": JSON.stringify(result),
+    "./scripts/results/dataflow/summary.json": JSON.stringify(result),
     stdout: textSummary(data, { indent: " ", enableColors: true }),
   };
 }
