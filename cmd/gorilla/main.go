@@ -43,7 +43,7 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		log.Printf("recv: %s", msg)
+		log.Printf("recv: type: %d, size: %d\n", msgTyp, len(msg))
 
 		err = conn.WriteMessage(msgTyp, msg)
 		if err != nil {
