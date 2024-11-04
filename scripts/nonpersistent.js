@@ -3,7 +3,7 @@ import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
 export const options = {
   vus: 100,
-  iterations: 10_000,
+  iterations: 10000,
 };
 
 const url = __ENV.WS_URL;

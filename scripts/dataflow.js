@@ -9,7 +9,7 @@ export const options = {
 
 const url = __ENV.WS_URL;
 const payloadData = open(__ENV.DATA_FILE);
-const requests = 10_000 / options.vus;
+const requests = 10000 / options.vus;
 
 const latency = new Trend("latency", true);
 

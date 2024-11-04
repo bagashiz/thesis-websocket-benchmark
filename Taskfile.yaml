@@ -32,11 +32,11 @@ tasks:
 
   build:coder:
     desc: "Build binary for coder websocket implementation"
-    cmd: CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/coder ./cmd/main.go
+    cmd: CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/coder ./cmd/coder/main.go
 
   build:gorilla:
     desc: "Build binary for gorilla websocket implementation"
-    cmd: CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/gorilla ./cmd/main.go
+    cmd: CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/gorilla ./cmd/gorilla/main.go
 
   ws:
     desc: "Connect to websocket server using websocat"

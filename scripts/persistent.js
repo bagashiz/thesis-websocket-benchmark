@@ -8,7 +8,7 @@ export const options = {
 
 const url = __ENV.WS_URL;
 const payloadData = open("../data/1kb.html");
-const requests = 10_000 / options.vus;
+const requests = 10000 / options.vus;
 
 export default function () {
   const ws = new WebSocket(url);

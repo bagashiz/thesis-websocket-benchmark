@@ -9,7 +9,7 @@ export const options = {
 
 const url = __ENV.WS_URL;
 const payloadData = open("../data/1kb.html");
-const duration = 60_000; // 1m
+const duration = 60000; // 1m
 
 const latency = new Trend("latency", true);
 
