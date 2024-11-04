@@ -8,7 +8,7 @@ export const options = {
 };
 
 const url = __ENV.WS_URL;
-const data = open(__ENV.DATA_FILE);
+const payloadData = open(__ENV.DATA_FILE);
 const requests = 10_000 / options.vus;
 
 const latency = new Trend("latency", true);
@@ -19,27 +19,25 @@ export default function () {
 
   ws.onopen = () => {
     const send = setInterval(() => {
-      if (counter >= requests) {
-        clearInterval(send);
-        ws.close();
-        return;
-      }
       const start = Date.now();
-      ws.send(data);
+      ws.send(payloadData);
+
       ws.onmessage = (_) => {
         latency.add(Date.now() - start);
+        counter++;
+        if (counter == requests) {
+          clearInterval(send);
+          ws.close();
+        }
       };
-      counter++;
-    }, 0);
-
-    ws.onclose = () => {
-      clearTimeout(send);
-    };
+    }, 10);
   };
 }
 
 export function handleSummary(data) {
   const result = {
+    concurrent_users: data.metrics.vus.values.value,
+    data_size: __ENV.DATA_FILE.split("/").pop().replace(".html", ""),
     latency_avg: Math.round(data.metrics.latency.values.avg * 100) / 100, // ms
   };
 

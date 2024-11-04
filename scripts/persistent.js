@@ -7,7 +7,7 @@ export const options = {
 };
 
 const url = __ENV.WS_URL;
-const data = open(__ENV.DATA_FILE);
+const payloadData = open("../data/1kb.html");
 const requests = 10_000 / options.vus;
 
 export default function () {
@@ -16,19 +16,23 @@ export default function () {
 
   ws.onopen = () => {
     const send = setInterval(() => {
-      if (counter >= requests) {
+      ws.send(payloadData);
+    }, 10);
+
+    ws.onmessage = (_) => {
+      counter++;
+      if (counter == requests) {
         clearInterval(send);
         ws.close();
-        return;
       }
-      ws.send(data);
-      counter++;
-    }, 1);
+    };
   };
 }
 
 export function handleSummary(data) {
   const result = {
+    concurrent_users: data.metrics.vus.values.value,
+    data_size: "1kb",
     throughput: Math.round(data.metrics.ws_msgs_received.values.rate),
   };
 

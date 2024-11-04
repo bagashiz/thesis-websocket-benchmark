@@ -44,4 +44,14 @@ tasks:
 
   k6:
     desc: "Run K6 scripts"
-    cmd: "k6 run -e TOTAL_CLIENT={{.TOTAL_CLIENT}} -e WS_URL={{.WS_URL}} -e DATA_FILE=../{{.DATA_FILE}} {{.CLI_ARGS}}"
+    cmds:
+      - "k6 run -e TOTAL_CLIENT={{.TOTAL_CLIENT}} -e WS_URL={{.WS_URL}} -e DATA_FILE=../{{.DATA_FILE}} ./scripts/{{.CLI_ARGS}}.js"
+      - task: append
+
+  append:
+    desc: "Append individual results to json file"
+    cmd: "./appendresult.sh {{.CLI_ARGS}}"
+
+  csv:
+    desc: "Convert results json files to each separate csv files"
+    cmd: "./jsontocsv.sh"

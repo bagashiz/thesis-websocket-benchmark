@@ -8,7 +8,7 @@ export const options = {
 };
 
 const url = __ENV.WS_URL;
-const data = open("../data/1kb.html");
+const payloadData = open("../data/1kb.html");
 const duration = 60_000; // 1m
 
 const latency = new Trend("latency", true);
@@ -19,11 +19,11 @@ export default function () {
   ws.onopen = () => {
     const send = setInterval(() => {
       const start = Date.now();
-      ws.send(data);
+      ws.send(payloadData);
       ws.onmessage = (_) => {
         latency.add(Date.now() - start);
       };
-    }, 0);
+    }, 10);
 
     const close = setTimeout(() => {
       clearInterval(send);
@@ -38,6 +38,8 @@ export default function () {
 
 export function handleSummary(data) {
   const result = {
+    concurrent_users: data.metrics.vus.values.value,
+    data_size: "1kb",
     latency_avg: Math.round(data.metrics.latency.values.avg * 100) / 100, // ms
     throughput: Math.round(data.metrics.ws_msgs_received.values.rate),
   };

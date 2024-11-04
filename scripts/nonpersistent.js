@@ -3,33 +3,26 @@ import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
 export const options = {
   vus: 100,
-  iterations: 100,
-  noConnectionReuse: true,
+  iterations: 10_000,
 };
 
 const url = __ENV.WS_URL;
-const data = open(__ENV.DATA_FILE);
-const requests = 10_000 / options.vus;
+const payloadData = open("../data/1kb.html");
 
 export default function () {
   const ws = new WebSocket(url);
-  let counter = 0;
-
   ws.onopen = () => {
-    const send = setInterval(() => {
-      if (counter >= requests) {
-        clearInterval(send);
-        ws.close();
-        return;
-      }
-      ws.send(data);
-      counter++;
-    }, 1);
+    ws.send(payloadData);
+  };
+  ws.onmessage = (_) => {
+    ws.close();
   };
 }
 
 export function handleSummary(data) {
   const result = {
+    concurrent_users: data.metrics.vus.values.value,
+    data_size: "1kb",
     throughput: Math.round(data.metrics.ws_msgs_received.values.rate),
   };
 

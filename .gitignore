@@ -1,4 +1,6 @@
 node_modules
 tmp
 scripts/results
+json
+csv
 .env
