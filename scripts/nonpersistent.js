@@ -2,7 +2,7 @@ import { WebSocket } from "k6/experimental/websockets";
 import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
 export const options = {
-  vus: 100,
+  vus: 50,
   iterations: 10000,
 };
 

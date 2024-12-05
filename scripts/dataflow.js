@@ -3,8 +3,8 @@ import { Trend } from "k6/metrics";
 import { textSummary } from "https://jslib.k6.io/k6-summary/0.1.0/index.js";
 
 export const options = {
-  vus: 100,
-  iterations: 100,
+  vus: 50,
+  iterations: 50,
 };
 
 const url = __ENV.WS_URL;

@@ -78,4 +78,4 @@ rm -f "$result"
 
 # Display summary file contents
 echo "Current summary contents:"
-jq '.' "$json"
+jq '.[-10:]' "$json"
